@@ -1,0 +1,568 @@
+{
+	"info": {
+		"_postman_id": "73bfbb8b-a8c4-407c-b2df-6983fad6c693",
+		"name": "Rental API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19354289"
+	},
+	"item": [
+		{
+			"name": "Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status is Up\",() => {\r",
+							"    const response = pm.response.json();\r",
+							"    console.log(response.status);\r",
+							"    console.log(response[\"status\"]);\r",
+							"    pm.expect(response.status).to.eql(\"UP\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/status",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"status"
+					]
+				},
+				"description": "Endpoint untuk mendapatkan status apakah API aktif atau tidak , Up = Aktif , Down = Tidak Aktif"
+			},
+			"response": []
+		},
+		{
+			"name": "Register New API Client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Token Created\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.environment.set(\"token\",response.accessToken);\r",
+							"    pm.expect(response.accessToken).to.eql(pm.environment.get(\"token\"));\r",
+							"});;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"clientName\": \"{{$randomFullName}}\",\r\n   \"clientEmail\": \"{{randomFirstName}}@{{$randomDomainName}}.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api-clients",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api-clients"
+					]
+				},
+				"description": "Untuk dapat melakukan order diharuskan untuk registrasi terlebih dahulu dengan menginput nama dan email yang mana akan mendapatkan akses token yang digunakan untuk melakukan order"
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Order Created\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.environment.set(\"orderId\",response.orderId);\r",
+							"    pm.expect(response.created).to.eql(true);\r",
+							"    pm.expect(response.orderId).to.eql(pm.environment.get(\"orderId\"));\r",
+							"});\r",
+							"    \r",
+							"\r",
+							"\r",
+							"\r",
+							"  \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"toolId\": 6483,\r\n \"customerName\": \"{{$randomFullName}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/orders",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders"
+					]
+				},
+				"description": "Endpoint yang digunakan untuk melakukan order dengan cara memasukan id barang yang valid dan nama pelanggan"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Tools",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"const tools = response.filter((tools) => tools.inStock === true);\r",
+							"const tool = tools[1];\r",
+							"\r",
+							"if(tool) {\r",
+							"    pm.environment.set(\"toolId\", tool.id);\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Tool found\", () => {\r",
+							"    pm.expect(tool).to.be.an('Object');\r",
+							"    pm.expect(tool.inStock).to.eql(true);\r",
+							"    pm.expect(tool.category).to.eql(\"trailers\");\r",
+							"  \r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/tools?category={{Category}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tools"
+					],
+					"query": [
+						{
+							"key": "available",
+							"value": "false",
+							"disabled": true
+						},
+						{
+							"key": "category",
+							"value": "ladder",
+							"disabled": true
+						},
+						{
+							"key": "category",
+							"value": "plumbing",
+							"disabled": true
+						},
+						{
+							"key": "category",
+							"value": "{{Category}}"
+						}
+					]
+				},
+				"description": "Endpoint yang digunakan untuk menampilkan semua barang yang mana dapat di filter sesuai dengan query param"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Tools",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Tool is Matched\", () => {\r",
+							"    pm.expect(response).to.be.an('Object');\r",
+							"    pm.expect(response.id).to.eql(pm.environment.get('toolId'));\r",
+							"    console.log(response);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Stock is More Than 0\", () => {\r",
+							"    pm.expect(response[\"current-stock\"]).to.be.above(1);\r",
+							"    console.log(response);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/tools/:toolId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tools",
+						":toolId"
+					],
+					"query": [
+						{
+							"key": "user-manual",
+							"value": "false",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "toolId",
+							"value": "{{toolId}}"
+						}
+					]
+				},
+				"description": "Endpoint untuk mendapatkan detail suatu barang dengan memasukan id barang tersebut"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"   "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/orders",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders"
+					]
+				},
+				"description": "Mendapatkan semua pesanan yang di order sesuai dengan akses token"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Single Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Order Has Found\",() => {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.id).to.eql(pm.environment.get(\"toolId\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/tools/:toolId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tools",
+						":toolId"
+					],
+					"variable": [
+						{
+							"key": "toolId",
+							"value": "{{toolId}}"
+						}
+					]
+				},
+				"description": "Mendapatkan detail order dengan cara memasukan id barang yang telah di order dan akses token"
+			},
+			"response": []
+		},
+		{
+			"name": "Update An Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"customerName\": \"{{$randomFullName}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/orders/:orderId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders",
+						":orderId"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				},
+				"description": "Melakukan update terhadap pesanan"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete An Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/orders/:orderId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders",
+						":orderId"
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				},
+				"description": "Mengahapus pesanan"
+			},
+			"response": []
+		},
+		{
+			"name": "Check Order Deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/orders/:orderId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"orders",
+						":orderId"
+					],
+					"query": [
+						{
+							"key": "user-manual",
+							"value": "true",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "orderId",
+							"value": "{{orderId}}"
+						}
+					]
+				},
+				"description": "Endpoint yang digunakan untuk melakukan cek apakah pesanan telah dihapus atau belum"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Token1",
+			"value": "91e7d90b28a518f9313174ff8fbb89ab291ed5eec065db78136f5ff0d41273eb",
+			"type": "string"
+		},
+		{
+			"key": "Token2",
+			"value": "099d6ad68a7c10d2a43d1cb4d9d0cf53f58357f17d6f24a38dee106a0a11758a",
+			"type": "string"
+		}
+	]
+}
