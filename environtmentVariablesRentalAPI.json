@@ -1,0 +1,57 @@
+{
+	"id": "a70f15c9-3a6e-4184-b745-8e018e2440f4",
+	"name": "Tool Rental API",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "https://simple-tool-rental-api.glitch.me",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "orderId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "toolId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Category",
+			"value": "trailers",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "companies",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "company",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "iterationData",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2022-12-22T17:01:51.918Z",
+	"_postman_exported_using": "Postman/10.6.7"
+}
