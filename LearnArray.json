@@ -1,0 +1,119 @@
+{
+	"info": {
+		"_postman_id": "3f77c8fb-bc87-4863-bf68-42209e3089d5",
+		"name": "Learn Array",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19354289"
+	},
+	"item": [
+		{
+			"name": "Arrays",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"//const Manufacturer = response.filters[1];\r",
+							"//console.log(response.filters[1]);\r",
+							"\r",
+							"let Manufacturer;\r",
+							"for (let filter of response.filters){\r",
+							"if(filter.name === \"MANUFACTURER\") {\r",
+							"    Manufacturer = filter;\r",
+							"   \r",
+							"}\r",
+							"}\r",
+							" console.log(response.Manufacturer);\r",
+							"pm.test(\"Should Not Allowed\", function () {\r",
+							"    pm.expect(Manufacturer.name).to.eql(\"MANUFACTURER\");\r",
+							"    pm.expect(Manufacturer.isAllowed).to.be.false;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.mocky.io/v2/5ab350d62f00005a00ca3663",
+					"protocol": "http",
+					"host": [
+						"www",
+						"mocky",
+						"io"
+					],
+					"path": [
+						"v2",
+						"5ab350d62f00005a00ca3663"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Nested IF",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"let commentsStatus = jsonData.prefs.comments.status;\r",
+							"\r",
+							"console.log(commentsStatus);\r",
+							"\r",
+							"pm.test(\"Status Is Disable\", function() {\r",
+							"    pm.expect(commentsStatus).to.eql(\"disabled\");\r",
+							"});\r",
+							"\r",
+							"//digunakan ketika mencari properti yang nilai nya sudah diketahui\r",
+							"let statusMember = jsonData.limits['54bba24af6196bd5f824e563'].boards.  totalPerMember.status;\r",
+							"console.log(statusMember);\r",
+							"\r",
+							"pm.test(\"Status Is OK\", function() {\r",
+							"    pm.expect(statusMember).to.eql(\"ok\");\r",
+							"});\r",
+							"\r",
+							"//digunakan ketika mencari properti yang nilai nya tidak diketahui dan nilai properti tersebut merupakan alphanumeric\r",
+							"\r",
+							"let memberStatus;\r",
+							"\r",
+							"for (let key in jsonData.limits){\r",
+							"    console.log(key, jsonData.limits[key]);\r",
+							"    if(jsonData.limits[key].hasOwnProperty('boards')) {\r",
+							"        memberStatus = jsonData.limits[key].boards.totalPerMember.status\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Status Is OK\", function() {\r",
+							"    pm.expect(memberStatus).to.eql(\"ok\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.mocky.io/v2/5ab34d8c2f00006600ca3652",
+					"protocol": "http",
+					"host": [
+						"www",
+						"mocky",
+						"io"
+					],
+					"path": [
+						"v2",
+						"5ab34d8c2f00006600ca3652"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
